@@ -1,0 +1,11 @@
+apm-server:
+  host: "0.0.0.0:8200"
+  rum:
+    enabled: true
+  ilm:
+    enabled: false
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]
+  password: ${changeme:-}
+setup.kibana:
+  host: "http://kibana:5601"

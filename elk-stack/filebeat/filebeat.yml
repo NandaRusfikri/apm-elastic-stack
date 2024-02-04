@@ -1,0 +1,26 @@
+processors:
+- add_cloud_metadata: ~
+
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      hints.enabled: true
+
+
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]
+  username: "elastic"
+  password: "changeme"
+
+
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /tvkurs/*.json
+  json.keys_under_root: true
+  json.add_error_key: true
+  json.message_key: log
+  
+
+
