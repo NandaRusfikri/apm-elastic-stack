@@ -3,6 +3,7 @@ package backend
 import (
 	"math/rand"
 	"runtime"
+	"time"
 )
 
 func GetCurrentFunctionName() string {
@@ -20,4 +21,9 @@ func GetCurrentFunctionName() string {
 
 func RandInt(min, max int) int {
 	return rand.Intn(max-min) + min
+}
+
+func SendEmail(to string) error {
+	time.Sleep(time.Duration(RandInt(800, 1300)) * time.Millisecond)
+	return nil
 }

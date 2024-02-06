@@ -2,7 +2,7 @@ package main
 
 import (
 	"backend"
-	"backend/module/auth"
+	"backend/module/user"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -33,17 +33,17 @@ func main() {
 	apmgin.WithPanicPropagation()
 	r.Use(apmgin.Middleware(r))
 
-	repo := auth.NewAuthRepository()
-	service := auth.NewUsecase(repo)
+	repo := user.NewRepository()
+	service := user.NewUsecase(repo)
 
-	auth.NewController(service, r)
+	user.NewController(service, r)
 
 	r.Run(":9090")
 }
 
 func common() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		fmt.Printf("common %s %s\n", c.Request.Method, c.FullPath())
+		//fmt.Printf("common %s %s\n", c.Request.Method, c.FullPath())
 		ctx, span := backend.Tracer.Start(c.Request.Context(), fmt.Sprintf("%s %s", c.Request.Method, c.FullPath()))
 
 		defer span.End()
