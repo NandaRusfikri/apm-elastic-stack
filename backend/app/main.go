@@ -15,8 +15,6 @@ func main() {
 		log.Errorln("Error loading .env file ", err)
 	}
 
-	r := gin.Default()
-
 	tracer, err := apm.NewTracerOptions(apm.TracerOptions{
 		ServiceName:        "Backend Nanda",
 		ServiceVersion:     "V.1.2.3",
@@ -24,8 +22,8 @@ func main() {
 	})
 
 	opts := apmgin.WithTracer(tracer)
-
 	apmgin.WithPanicPropagation()
+	r := gin.Default()
 	r.Use(apmgin.Middleware(r, opts))
 
 	repo := user.NewRepository()
