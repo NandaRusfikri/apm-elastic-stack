@@ -13,6 +13,7 @@ export default function () {
     Register()
     ForgotPassword()
     Update()
+    ExportPdf()
 
 }
 
@@ -87,6 +88,18 @@ function Update(){
 
 function GetList(){
     const url = host+'/users';
+
+    const params = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+
+    http.get(url,  params);
+}
+
+function ExportPdf(){
+    const url = host+'/user/export-pdf';
 
     const params = {
         headers: {
