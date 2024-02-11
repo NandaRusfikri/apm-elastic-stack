@@ -1,16 +1,12 @@
 package main
 
 import (
-	"backend"
 	"backend/module/user"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
 	"go.elastic.co/apm/module/apmgin/v2"
-	"go.elastic.co/apm/module/apmotel/v2"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/propagation"
+	"go.elastic.co/apm/v2"
 )
 
 func main() {
@@ -19,19 +15,18 @@ func main() {
 		log.Errorln("Error loading .env file ", err)
 	}
 
-	provider, err := apmotel.NewTracerProvider()
-	if err != nil {
-		log.Fatal(err)
-	}
-	otel.SetTracerProvider(provider)
-	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
-	backend.Tracer = otel.Tracer("Service-nanda")
-
 	r := gin.Default()
-	r.Use(common())
+
+	tracer, err := apm.NewTracerOptions(apm.TracerOptions{
+		ServiceName:        "Backend Nanda",
+		ServiceVersion:     "V.1.2.3",
+		ServiceEnvironment: "Misal DEV",
+	})
+
+	opts := apmgin.WithTracer(tracer)
 
 	apmgin.WithPanicPropagation()
-	r.Use(apmgin.Middleware(r))
+	r.Use(apmgin.Middleware(r, opts))
 
 	repo := user.NewRepository()
 	service := user.NewUsecase(repo)
@@ -39,17 +34,4 @@ func main() {
 	user.NewController(service, r)
 
 	r.Run(":9090")
-}
-
-func common() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		//fmt.Printf("common %s %s\n", c.Request.Method, c.FullPath())
-		ctx, span := backend.Tracer.Start(c.Request.Context(), fmt.Sprintf("%s %s", c.Request.Method, c.FullPath()))
-
-		defer span.End()
-
-		c.Set("OTEL", ctx)
-		c.Next()
-
-	}
 }

@@ -1,6 +1,8 @@
 package backend
 
 import (
+	"context"
+	"go.elastic.co/apm/v2"
 	"math/rand"
 	"runtime"
 	"time"
@@ -23,7 +25,17 @@ func RandInt(min, max int) int {
 	return rand.Intn(max-min) + min
 }
 
-func SendEmail(to string) error {
-	time.Sleep(time.Duration(RandInt(800, 1300)) * time.Millisecond)
+func SendEmail(ctx context.Context, to string) error {
+	span, ctx := apm.StartSpan(ctx, GetCurrentFunctionName(), "Utils")
+	defer span.End()
+	time.Sleep(time.Duration(RandInt(1000, 3000)) * time.Millisecond)
 	return nil
+}
+
+func ExportPDF(ctx context.Context, data []string) ([]string, error) {
+	span, ctx := apm.StartSpan(ctx, "ExportPDF", GetCurrentFunctionName())
+	defer span.End()
+
+	time.Sleep(time.Duration(RandInt(1000, 3000)) * time.Millisecond)
+	return data, nil
 }

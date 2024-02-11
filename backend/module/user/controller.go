@@ -2,8 +2,8 @@ package user
 
 import (
 	"backend"
-	"context"
 	"github.com/gin-gonic/gin"
+	"go.elastic.co/apm/v2"
 	"net/http"
 )
 
@@ -22,13 +22,14 @@ func NewController(usecase UsecaseInterface, g *gin.Engine) {
 	g.POST("/forgot-password", handler.ForgotPassword)
 	g.GET("/users", handler.GetList)
 	g.PUT("/user", handler.Update)
+	g.POST("/user/export-pdf", handler.ExportPDF)
 
 }
 
 func (ctrl *Controller) Login(ctx *gin.Context) {
-	c := ctx.MustGet("OTEL").(context.Context)
+	c := ctx.Request.Context()
 
-	c, span := backend.Tracer.Start(c, backend.GetCurrentFunctionName())
+	span, c := apm.StartSpan(c, backend.GetCurrentFunctionName(), "Controller")
 	defer span.End()
 
 	var request backend.RequestLogin
@@ -38,19 +39,21 @@ func (ctrl *Controller) Login(ctx *gin.Context) {
 		return
 	}
 
-	data, err := ctrl.usecase.Login(ctx, request)
+	data, err := ctrl.usecase.Login(c, request)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
+		return
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{"message": "Success",
 			"data": data})
+		return
 	}
 
 }
 
 func (ctrl *Controller) Register(ctx *gin.Context) {
 	c := ctx.Request.Context()
-	c, span := backend.Tracer.Start(c, backend.GetCurrentFunctionName())
+	span, c := apm.StartSpan(c, backend.GetCurrentFunctionName(), "Controller")
 	defer span.End()
 	var request backend.RegisterUser
 
@@ -59,20 +62,21 @@ func (ctrl *Controller) Register(ctx *gin.Context) {
 		return
 	}
 
-	data, err := ctrl.usecase.Register(ctx, request)
+	data, err := ctrl.usecase.Register(c, request)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
+		return
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{"message": "Success",
 			"data": data})
+		return
 	}
-	return
 
 }
 
 func (ctrl *Controller) ForgotPassword(ctx *gin.Context) {
 	c := ctx.Request.Context()
-	c, span := backend.Tracer.Start(c, backend.GetCurrentFunctionName())
+	span, c := apm.StartSpan(c, backend.GetCurrentFunctionName(), "Controller")
 	defer span.End()
 	var request backend.ForgotPassword
 
@@ -81,20 +85,21 @@ func (ctrl *Controller) ForgotPassword(ctx *gin.Context) {
 		return
 	}
 
-	data, err := ctrl.usecase.ForgotPassword(ctx, request)
+	data, err := ctrl.usecase.ForgotPassword(c, request)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
+		return
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{"message": "Success",
 			"data": data})
+		return
 	}
-	return
 
 }
 
 func (ctrl *Controller) Update(ctx *gin.Context) {
 	c := ctx.Request.Context()
-	c, span := backend.Tracer.Start(c, backend.GetCurrentFunctionName())
+	span, c := apm.StartSpan(c, backend.GetCurrentFunctionName(), "Controller")
 	defer span.End()
 	var request backend.User
 
@@ -106,26 +111,45 @@ func (ctrl *Controller) Update(ctx *gin.Context) {
 	data, err := ctrl.usecase.Update(ctx, request)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
+		return
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{"message": "Success",
 			"data": data})
+		return
 	}
-	return
 
 }
 
 func (ctrl *Controller) GetList(ctx *gin.Context) {
 	c := ctx.Request.Context()
-	c, span := backend.Tracer.Start(c, backend.GetCurrentFunctionName())
+	span, c := apm.StartSpan(c, backend.GetCurrentFunctionName(), "Controller")
 	defer span.End()
 
 	data, err := ctrl.usecase.GetList(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
+		return
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{"message": "Success",
 			"data": data})
+		return
 	}
-	return
+
+}
+
+func (ctrl *Controller) ExportPDF(ctx *gin.Context) {
+	c := ctx.Request.Context()
+	span, c := apm.StartSpan(c, backend.GetCurrentFunctionName(), "Controller")
+	defer span.End()
+
+	data, err := ctrl.usecase.ExportPDF(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
+		return
+	} else {
+		ctx.JSON(http.StatusOK, gin.H{"message": "Success",
+			"data": data})
+		return
+	}
 
 }

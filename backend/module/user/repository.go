@@ -4,6 +4,7 @@ import (
 	"backend"
 	"context"
 	"fmt"
+	"go.elastic.co/apm/v2"
 	"strconv"
 	"time"
 )
@@ -24,7 +25,8 @@ func NewRepository() RepositoryInterface {
 }
 
 func (r Repository) Login(ctx context.Context, input backend.RequestLogin) (backend.User, error) {
-	ctx, span := backend.Tracer.Start(ctx, backend.GetCurrentFunctionName())
+
+	span, ctx := apm.StartSpan(ctx, backend.GetCurrentFunctionName(), "Repository")
 	defer span.End()
 
 	time.Sleep(time.Duration(backend.RandInt(200, 1500)) * time.Millisecond)
@@ -49,7 +51,8 @@ func (r Repository) Login(ctx context.Context, input backend.RequestLogin) (back
 }
 
 func (r Repository) Register(ctx context.Context, input backend.RegisterUser) (backend.User, error) {
-	ctx, span := backend.Tracer.Start(ctx, backend.GetCurrentFunctionName())
+
+	span, ctx := apm.StartSpan(ctx, backend.GetCurrentFunctionName(), "Repository")
 	defer span.End()
 
 	time.Sleep(time.Duration(backend.RandInt(200, 1500)) * time.Millisecond)
@@ -75,7 +78,7 @@ func (r Repository) Register(ctx context.Context, input backend.RegisterUser) (b
 }
 
 func (r Repository) ForgotPassword(ctx context.Context, input backend.ForgotPassword) (backend.User, error) {
-	ctx, span := backend.Tracer.Start(ctx, backend.GetCurrentFunctionName())
+	span, ctx := apm.StartSpan(ctx, backend.GetCurrentFunctionName(), "Repository")
 	defer span.End()
 
 	time.Sleep(time.Duration(backend.RandInt(200, 1500)) * time.Millisecond)
@@ -85,7 +88,7 @@ func (r Repository) ForgotPassword(ctx context.Context, input backend.ForgotPass
 }
 
 func (r Repository) GetList(ctx context.Context) ([]string, error) {
-	ctx, span := backend.Tracer.Start(ctx, backend.GetCurrentFunctionName())
+	span, ctx := apm.StartSpan(ctx, backend.GetCurrentFunctionName(), "Repository")
 	defer span.End()
 
 	var ListUser []string
@@ -100,7 +103,7 @@ func (r Repository) GetList(ctx context.Context) ([]string, error) {
 }
 
 func (r Repository) Update(ctx context.Context, input backend.User) (backend.User, error) {
-	ctx, span := backend.Tracer.Start(ctx, backend.GetCurrentFunctionName())
+	span, ctx := apm.StartSpan(ctx, backend.GetCurrentFunctionName(), "Repository")
 	defer span.End()
 
 	time.Sleep(time.Duration(backend.RandInt(200, 1500)) * time.Millisecond)
