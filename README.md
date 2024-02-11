@@ -5,6 +5,7 @@ Distributed Tracing And Logging With Elastic Stack
 
 
 ![Image1](image1.png)
+![Image2](image2.png)
 
 
 
