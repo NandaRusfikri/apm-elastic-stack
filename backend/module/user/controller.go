@@ -17,6 +17,11 @@ func NewController(usecase UsecaseInterface, g *gin.Engine) {
 		gin:     g,
 		usecase: usecase,
 	}
+	g.GET("/", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{"message": "backend nyala",
+			"data": "nyala nyala"})
+		return
+	})
 	g.POST("/login", handler.Login)
 	g.POST("/register", handler.Register)
 	g.POST("/forgot-password", handler.ForgotPassword)
