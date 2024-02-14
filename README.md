@@ -38,7 +38,13 @@ k6 run load-test.js
 
 **Observability:** [Elastic Stack](https://www.elastic.co/)
 
+## Credential
 
+
+### Elastic
+Username : elastic
+
+Password : changeme
 
 
 ## Reference
