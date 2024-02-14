@@ -43,7 +43,7 @@ k6 run load-test.js
 
 ## Reference
 
-[APM Agent](https://github.com/elastic/apm-agent-go)
+[APM Agent](https://github.com/elastic/apm)
 
 [Docker ELK](https://github.com/deviantony/docker-elk)
 
