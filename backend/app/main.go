@@ -23,13 +23,14 @@ func main() {
 
 	opts := apmgin.WithTracer(tracer)
 	apmgin.WithPanicPropagation()
-	r := gin.Default()
-	r.Use(apmgin.Middleware(r, opts))
+
+	engine := gin.Default()
+	engine.Use(apmgin.Middleware(engine, opts))
 
 	repo := user.NewRepository()
 	service := user.NewUsecase(repo)
 
-	user.NewController(service, r)
+	user.NewController(service, engine)
 
-	r.Run(":9090")
+	engine.Run(":9090")
 }
