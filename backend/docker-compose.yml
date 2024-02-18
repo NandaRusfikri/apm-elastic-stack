@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+  backend:
+    container_name: elk-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    init: true
+    ports:
+      - "9090:9090"
+    env_file:
+      - .env
+    environment:
+      - ELASTIC_APM_SERVER_URL=http://192.168.55.104:8200
+    networks:
+      - elk
+
+networks:
+  elk:
+    driver: bridge

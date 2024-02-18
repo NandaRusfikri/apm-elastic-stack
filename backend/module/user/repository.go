@@ -4,6 +4,7 @@ import (
 	"backend"
 	"context"
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"go.elastic.co/apm/v2"
 	"strconv"
 	"time"
@@ -41,6 +42,9 @@ func (r Repository) Login(ctx context.Context, input backend.RequestLogin) (back
 		}
 	}
 	if isPrime {
+		fmt.Println(" fmt println not found")
+		fmt.Errorf("fmt error not found")
+		log.Error(" log error not found")
 		return backend.User{}, fmt.Errorf("not found")
 	} else {
 		return backend.User{
