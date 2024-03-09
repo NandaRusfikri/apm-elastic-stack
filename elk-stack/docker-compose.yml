@@ -71,11 +71,6 @@ services:
     ports:
       - 5044:5044
       - 50000:50000/tcp
-      - 50000:50000/udp
-      - 9600:9600
-      - 514:514
-      - 3654:3654
-      - 3653:3653
     environment:
       LS_JAVA_OPTS: -Xms256m -Xmx256m
       LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
@@ -128,6 +123,7 @@ services:
     container_name: filebeat
     image: docker.elastic.co/beats/filebeat:${ELASTIC_VERSION}
     volumes:
+      - ../backend/logs:/logs
       - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro,Z
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro

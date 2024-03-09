@@ -6,6 +6,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 	"go.elastic.co/apm/module/apmgin/v2"
+	"io"
 	"os"
 )
 
@@ -21,6 +22,8 @@ func init() {
 	} else {
 		logrus.Info("Failed to log to file, using default stderr")
 	}
+	f, _ := os.Create("logs/gin.log")
+	gin.DefaultWriter = io.MultiWriter(f)
 }
 
 func main() {

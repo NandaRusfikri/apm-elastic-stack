@@ -17,7 +17,7 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /tvkurs/*.json
+    - /logs/*.log
   json.keys_under_root: true
   json.add_error_key: true
   json.message_key: log
