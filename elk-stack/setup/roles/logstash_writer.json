@@ -7,7 +7,7 @@
   "indices": [
     {
       "names": [
-        "logs-kong",
+        "logs-nanda",
         "logstash-*",
         "ecs-logstash-*"
       ],

@@ -1,56 +1,57 @@
 package main
 
 import (
-	"backend"
 	"backend/module/user"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"go.elastic.co/apm/module/apmgin/v2"
-	"go.elastic.co/apm/v2"
-	"go.elastic.co/ecslogrus"
+	"os"
 )
 
 func init() {
-	//log := log.New()
-	log.SetFormatter(&ecslogrus.Formatter{})
-	//log.SetOutput(os.Stdout)
 
-	//file, err := os.OpenFile("logrus.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	//if err == nil {
-	//	log.SetOutput(file)
-	//} else {
-	//	log.Info("Failed to log to file, using default stderr")
-	//}
+	logrus.SetFormatter(&logrus.JSONFormatter{})
+	logrus.SetOutput(os.Stdout)
+	os.MkdirAll("logs", 0777)
+
+	file, err := os.OpenFile("logs/backend.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err == nil {
+		logrus.SetOutput(file)
+	} else {
+		logrus.Info("Failed to log to file, using default stderr")
+	}
 }
 
 func main() {
-	backend.TestConnectAPMServer()
+
 	err := godotenv.Load()
 	if err != nil {
-		log.Errorln("Error loading .env file ", err)
+		logrus.Errorln("Error loading .env file ", err)
 	}
+	logrus.Infoln("✅ Success Load  .env file")
 
-	tracer, err := apm.NewTracerOptions(apm.TracerOptions{
-		ServiceName:        "Backend Nanda",
-		ServiceVersion:     "V.1.2.3",
-		ServiceEnvironment: "Misal DEV",
-	})
-	if err != nil {
-		fmt.Println("err APM ", err)
-	}
+	// tracer, err := apm.NewTracerOptions(apm.TracerOptions{
+	// 	ServiceName:        "Backend Nanda",
+	// 	ServiceVersion:     "V.1.2.3",
+	// 	ServiceEnvironment: "Misal DEV",
+	// })
+	// if err != nil {
+	// 	fmt.Println("err APM ", err)
+	// }
 
-	opts := apmgin.WithTracer(tracer)
+	//opts := apmgin.WithTracer(tracer)
 	apmgin.WithPanicPropagation()
 
 	engine := gin.Default()
-	engine.Use(apmgin.Middleware(engine, opts))
-
+	engine.Use(apmgin.Middleware(engine))
+	gin.SetMode(gin.ReleaseMode)
 	repo := user.NewRepository()
 	service := user.NewUsecase(repo)
 
 	user.NewController(service, engine)
+
+	logrus.Infoln("💜 Starting Backend Service :9090")
 
 	engine.Run(":9090")
 }

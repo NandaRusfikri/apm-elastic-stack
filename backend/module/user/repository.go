@@ -42,8 +42,6 @@ func (r Repository) Login(ctx context.Context, input backend.RequestLogin) (back
 		}
 	}
 	if isPrime {
-		fmt.Println(" fmt println not found")
-		fmt.Errorf("fmt error not found")
 		log.Error(" log error not found")
 		return backend.User{}, fmt.Errorf("not found")
 	} else {
@@ -71,7 +69,7 @@ func (r Repository) Register(ctx context.Context, input backend.RegisterUser) (b
 		}
 	}
 	if isPrime {
-		panic("kaget ada error Prime ga jelas")
+		log.Errorf("kaget ada error Prime ga jelas")
 	}
 
 	return backend.User{
@@ -86,6 +84,7 @@ func (r Repository) ForgotPassword(ctx context.Context, input backend.ForgotPass
 	defer span.End()
 
 	time.Sleep(time.Duration(backend.RandInt(200, 1500)) * time.Millisecond)
+	log.Debug("Debug ForgotPassword Repository")
 
 	return backend.User{Name: input.Email}, nil
 

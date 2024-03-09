@@ -2,13 +2,9 @@ package backend
 
 import (
 	"context"
-	"fmt"
 	log "github.com/sirupsen/logrus"
 	"go.elastic.co/apm/v2"
-	"io/ioutil"
 	"math/rand"
-	"net/http"
-	"os"
 	"runtime"
 	"time"
 )
@@ -45,24 +41,6 @@ func ExportPDF(ctx context.Context, data []string) ([]string, error) {
 	defer span.End()
 
 	time.Sleep(time.Duration(RandInt(1000, 3000)) * time.Millisecond)
+	log.Info("ExportPDF Success")
 	return data, nil
-}
-
-func TestConnectAPMServer() {
-	resp, err := http.Get(os.Getenv("ELASTIC_APM_SERVER_URL"))
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-
-	// Baca response body
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println("Error membaca response body:", err)
-		return
-	}
-
-	// Cetak status code dan response body
-	fmt.Println("Status code:", resp.StatusCode)
-	fmt.Println("Response body:", string(body))
 }
