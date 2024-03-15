@@ -21,6 +21,9 @@ filebeat.inputs:
   json.keys_under_root: true
   json.add_error_key: true
   json.message_key: log
+- type: udp
+  max_message_size: 20KiB
+  host: "localhost:8600"
   
 
 

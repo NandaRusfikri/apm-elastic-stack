@@ -122,6 +122,8 @@ services:
     user: root
     container_name: filebeat
     image: docker.elastic.co/beats/filebeat:${ELASTIC_VERSION}
+    ports:
+      - 8600:8600
     volumes:
       - ../backend/logs:/logs
       - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro,Z
