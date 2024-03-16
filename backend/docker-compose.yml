@@ -6,6 +6,12 @@ services:
       context: .
       dockerfile: Dockerfile
     init: true
+    volumes:
+      - ./logs:/app/logs
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://192.168.55.104:8600"
     ports:
       - "9090:9090"
     env_file:

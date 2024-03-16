@@ -6,24 +6,24 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 	"go.elastic.co/apm/module/apmgin/v2"
-	"io"
-	"os"
 )
 
 func init() {
 
-	logrus.SetFormatter(&logrus.JSONFormatter{})
-	logrus.SetOutput(os.Stdout)
-	os.MkdirAll("logs", 0777)
-
-	file, err := os.OpenFile("logs/backend.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err == nil {
-		logrus.SetOutput(file)
-	} else {
-		logrus.Info("Failed to log to file, using default stderr")
-	}
-	f, _ := os.Create("logs/gin.log")
-	gin.DefaultWriter = io.MultiWriter(f)
+	//logrus.SetFormatter(&logrus.JSONFormatter{})
+	//logrus.SetOutput(os.Stdout)
+	//err := os.MkdirAll("logs", 0777)
+	//if err != nil {
+	//	return
+	//}
+	//
+	//file, err := os.OpenFile("logs/backend.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	//if err == nil {
+	//	logrus.SetOutput(file)
+	//} else {
+	//	logrus.Info("Failed to log to file, using default stderr")
+	//}
+	//gin.DefaultWriter = io.Discard
 }
 
 func main() {

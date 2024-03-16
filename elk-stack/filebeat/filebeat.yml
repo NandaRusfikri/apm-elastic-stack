@@ -1,11 +1,10 @@
 processors:
-- add_cloud_metadata: ~
+  - add_cloud_metadata: ~
 
 filebeat.autodiscover:
   providers:
     - type: docker
       hints.enabled: true
-
 
 output.elasticsearch:
   hosts: ["elasticsearch:9200"]
@@ -13,17 +12,18 @@ output.elasticsearch:
   password: "changeme"
 
 
+
 filebeat.inputs:
-- type: log
-  enabled: true
-  paths:
-    - /logs/*.log
-  json.keys_under_root: true
-  json.add_error_key: true
-  json.message_key: log
-- type: udp
-  max_message_size: 20KiB
-  host: "localhost:8600"
+  - type: log
+    enabled: true
+    paths:
+      - /logs/*.log
+    fields_under_root: true
+    fields:
+      application_name: backend-user
+    json.keys_under_root: true
+
+
   
 
 

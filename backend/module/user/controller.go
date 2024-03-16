@@ -3,6 +3,7 @@ package user
 import (
 	"backend"
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"go.elastic.co/apm/v2"
 	"net/http"
 )
@@ -18,6 +19,7 @@ func NewController(usecase UsecaseInterface, g *gin.Engine) {
 		usecase: usecase,
 	}
 	g.GET("/", func(ctx *gin.Context) {
+		logrus.Infoln("backend nyala")
 		ctx.JSON(http.StatusOK, gin.H{"message": "backend nyala",
 			"data": "nyala nyala"})
 		return
